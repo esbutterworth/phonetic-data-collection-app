@@ -1,0 +1,23 @@
+.recording {
+    margin: auto;
+    width: 50%;
+}
+
+.startButton {
+    text-align: center;
+}
+
+.wordDisplay {
+    text-align: center;
+    margin: auto;
+    width: 30em;
+    height: 10em;
+}
+
+.centered {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 1.3em;
+    vertical-align: middle;
+    line-height: 10em;
+}
