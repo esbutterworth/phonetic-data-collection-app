@@ -39,7 +39,8 @@ function startTrial() {
             console.log('recording target ' + currentTarget);
             targetDisplayElement.innerHTML = currentTarget;
             recordSpeech(stream, blob => {
-                createAudioDownloadElement(URL.createObjectURL(blob), currentTarget);
+                // createAudioDownloadElement(URL.createObjectURL(blob), currentTarget);
+                saveAudio(currentTarget, blob);
                 i++;
                 targetDisplayElement.innerHTML = '';
                 if (i >= targets.length) {
@@ -54,6 +55,7 @@ function startTrial() {
 
 // Record some speech
 function recordSpeech(stream, callback) {
+    console.log("recording speech");
     var chunks = [];
 
     // TODO detect the correct mime type
@@ -84,4 +86,22 @@ function recordSpeech(stream, callback) {
     // Not sure if I need to put an interval here or not, since it's such a short recording
     recorder.start();
 
+}
+
+function saveAudio(name, blob) {
+    var filename = name + "-" + new Date().toISOString();
+
+    console.log("sending " + filename);
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = e => {
+        if (this.readyState === 4) {
+            console.log("Server returned: " + e.target.responseText);
+        }
+    };
+
+    var fd = new FormData();
+    fd.append('audio_data', blob, filename);
+    xhr.open("POST", "saveAudio.php", true);
+    xhr.send(fd);
 }
