@@ -3,14 +3,15 @@
 // @author Elliot Butterworth
 
 // So jank that these are different values
-const recordingTime = 4000;
-const targetVisibleTime = 3000;
+const recordingTime = 5000;
+const targetVisibleTime = 4000;
 
 // For now, hardcoding the words here, but using JSON so eventually I'll be
 // able to use external files.
-var targetData = '{ "words": ["button", "veto", "pantry"]}';
+var targetData = '{ "targets": ["The cat is orange.", "The cat jumped over the dog.", "The dog growls at the cat.", "She sent a card from home.", "They went around the park again.", "The vase cracked right after.", "Another subject came in.", "They saw that it was hurt.", "They finished making the pillow fort."]}';
 
-var targets = JSON.parse(targetData).words;
+// TODO it would be nice to have this random, but I think it's more important to have consistent indices.
+var targets = JSON.parse(targetData).targets;
 
 // Functions for audio recording
 
@@ -28,29 +29,40 @@ function createAudioDownloadElement(blobUrl, wordName) {
 // Start the trial.
 function startTrial() {
     const targetDisplayElement = document.getElementById('target');
+
     var i = 0;
 
     // Get permission to use the mic:
     navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
-        targetDisplayElement.innerHTML = 'Read the words as they appear';
+        targetDisplayElement.innerHTML = 'Read the sentences as they appear.';
 
         var timer = setInterval(() => {
             let currentTarget = targets[i];
-            console.log('recording target ' + currentTarget);
+            console.log('recording target \"' + currentTarget + '\"');
             targetDisplayElement.innerHTML = currentTarget;
             recordSpeech(stream, blob => {
                 // createAudioDownloadElement(URL.createObjectURL(blob), currentTarget);
-                saveAudio(currentTarget, blob);
+                saveAudio(i, blob);
                 i++;
                 targetDisplayElement.innerHTML = '';
                 if (i >= targets.length) {
                     clearInterval(timer);
+                    stopTrial(stream);
                 }
             })
         }, recordingTime);
 
     }).catch(console.error);
 
+}
+
+// Stop the trial
+function stopTrial(stream) {
+    document.getElementById('target').innerHTML = 'That\'s all! Thank you for your help!';
+
+    stream.getTracks().forEach(track => {
+        track.stop();
+    })
 }
 
 // Record some speech
@@ -88,8 +100,8 @@ function recordSpeech(stream, callback) {
 
 }
 
-function saveAudio(name, blob) {
-    var filename = name + "-" + new Date().toISOString();
+function saveAudio(targetIndex, blob) {
+    var filename = targetIndex + "-" + new Date().toISOString();
 
     console.log("sending " + filename);
 
@@ -104,4 +116,13 @@ function saveAudio(name, blob) {
     fd.append('audio_data', blob, filename);
     xhr.open("POST", "saveAudio.php", true);
     xhr.send(fd);
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    return array;
 }
