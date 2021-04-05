@@ -61,8 +61,9 @@ function startTrial() {
             
             // Display the target text    
             new Promise((resolve, reject => {
-                displayTargetText(currentTarget, () => {});
-                resolve();
+                targetDisplayElement.innerHTML = currentTarget;
+                // Return after waiting
+                setTimeout(resolve, targetDisplayTime);
             })).then(() => {
                 // Target is finished 
                 // Next loop iter?? idk rn
