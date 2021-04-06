@@ -40,15 +40,15 @@ function startTrial() {
         /*
          * Start the recording.
          */
-        recordSpeech(stream, blob => {
-          // createAudioDownloadElement(URL.createObjectURL(blob), currentTarget);
+        recordSpeech(stream).then((blob) => {
             saveAudio(blob);
+            stopTrial(stream);
         });
        
         // Display all targets starting with the 0th
         displayTargets(0);
+ 
     }).catch(console.error);
-
 }
 
 /*
@@ -88,41 +88,40 @@ function stopTrial(stream) {
 
 /*
  * Record all trials as one long file.
- * TODO: Fuck callbacks, Promise is my new best friend.
  */
-function recordSpeech(stream, callback) {
+function recordSpeech(stream) {
     console.log("recording speech");
     var chunks = [];
 
-    // TODO detect the correct mime type
-    var recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
+    return new Promise((resolve, reject) => {
+        // TODO detect the correct mime type
+        var recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
 
-    recorder.ondataavailable = e => {
-        console.log('data pushed');
-        chunks.push(e.data);
-    };
+        recorder.ondataavailable = e => {
+            console.log('data pushed');
+            chunks.push(e.data);
+        };
 
-    recorder.onstart = e => console.log(recorder.state);
+        recorder.onstart = e => console.log(recorder.state);
 
-    recorder.onstop = e => {
-        console.log(recorder.state);
-        callback(new Blob(chunks, {type: 'audio/webm'}));
-        //createAudioDownloadElement(URL.createObjectURL(blob));
-    };
+        recorder.onstop = e => {
+            console.log(recorder.state);
+            resolve(new Blob(chunks, {type: 'audio/webm'}));
+            //createAudioDownloadElement(URL.createObjectURL(blob));
+        };
 
-    recorder.onerror = e => {
-        let error = e.error;
-        console.log(error);
-    }
+        recorder.onerror = e => {
+            let error = e.error;
+            console.log(error);
+        }
 
-    // Record for the desired amount of time
-    setTimeout(() => {
-        recorder.stop();
-    }, recordingTime);
+        // Record for the desired amount of time
+        setTimeout(() => {
+            recorder.stop();
+        }, recordingTime);
 
-    // Not sure if I need to put an interval here or not, since it's such a short recording
-    recorder.start();
-
+        recorder.start();
+    });
 }
 
 /*
