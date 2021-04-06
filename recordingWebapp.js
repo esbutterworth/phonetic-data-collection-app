@@ -2,6 +2,9 @@
  * Application for recording sentences for phonetic analysis.
  * Originally written in December of 2020, for LING 401.
  * Revised Spring 2021 for LING 499.
+ * 
+ * This is a hot mess currently, and when I'm not in 3 other classes
+ * it will be completely rewritten.
  * @author Elliot Butterworth
  */
 
@@ -24,18 +27,9 @@ const recordingTime = targetDisplayTime * targets.length;
  * Functions for audio recording
  */
 
-// Create a link to download an audio file
-function createAudioDownloadElement(blobUrl, wordName) {
-    const downloadElement = document.createElement('a');
-    downloadElement.style = 'display: block';
-    downloadElement.innerHTML = 'download ' + wordName;
-    downloadElement.download = wordName + '.webm';
-    downloadElement.href = blobUrl;
-
-    document.getElementById('downloadDisplay').appendChild(downloadElement);
-}
-
-// Start the trial.
+/*
+ * Start the trial.
+ */
 function startTrial() {
     targetDisplayElement = document.getElementById('target');
     
@@ -58,7 +52,7 @@ function startTrial() {
 }
 
 /*
- * Use a promise to delay
+ * Use a promise to delay.
  */
 function delay(milliseconds) {
     return new Promise((resolve, reject) => {
@@ -69,7 +63,7 @@ function delay(milliseconds) {
 }
 
 /*
- * Recursively display targets in sequence
+ * Recursively display targets in sequence.
  */
 function displayTargets(index) {
     target = targets[index];
@@ -77,7 +71,7 @@ function displayTargets(index) {
     targetDisplayElement.innerHTML = target;
     delay(targetDisplayTime).then(() => {
         // Once this has been displayed for long enough, display the next one  
-        if (index < targets.length) {
+        if (index < targets.length - 1) { // TODO check this index
             displayTargets(index + 1);
         } 
     });
@@ -92,7 +86,10 @@ function stopTrial(stream) {
     })
 }
 
-// Record some speech
+/*
+ * Record all trials as one long file.
+ * TODO: Fuck callbacks, Promise is my new best friend.
+ */
 function recordSpeech(stream, callback) {
     console.log("recording speech");
     var chunks = [];
@@ -128,6 +125,9 @@ function recordSpeech(stream, callback) {
 
 }
 
+/*
+ * Send audio to good old php for saving.
+ */
 function saveAudio(blob) {
     var filename = new Date().toISOString();
 
