@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# copy all these files into the server's folder\
+# TODO maybe copy a certain list of files instead of everything
+sudo cp ./* /srv/http/

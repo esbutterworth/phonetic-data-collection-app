@@ -7,7 +7,7 @@
 
 // For now, hardcoding the words here, but using JSON so eventually I'll be
 // able to use external files.
-var targetData = '{ "targets": ["The cat is orange.", "The cat jumped over the dog.", "The dog growls at the cat.", "She sent a card from home.", "They went around the park again.", "The vase cracked right after.", "Another subject came in.", "They saw that it was hurt.", "They finished making the pillow fort."]}';
+var targetData = '{ "targets": ["tack", "wack"]}';
 
 // HTML element for displaying current target 
 var targetDisplayElement;
@@ -50,40 +50,37 @@ function startTrial() {
           // createAudioDownloadElement(URL.createObjectURL(blob), currentTarget);
             saveAudio(blob);
         });
-
-        /*
-         * TODO: instead of using a timer here, just assume that each utterance
-         * is however long. since we'll be recording words instead of whole
-         * sentences, that should work fine.
-         */
-        targets.forEach(currentTarget => {  
-            console.log('recording target \"' + currentTarget + '\"');
-            
-            // Display the target text    
-            new Promise((resolve, reject => {
-                targetDisplayElement.innerHTML = currentTarget;
-                // Return after waiting
-                setTimeout(resolve, targetDisplayTime);
-            })).then(() => {
-                // Target is finished 
-                // Next loop iter?? idk rn
-            });
-            
-         });
+       
+        // Display all targets starting with the 0th
+        displayTargets(0);
     }).catch(console.error);
 
 }
 
 /*
- * Display some text in the target area.
- * uses a callback function for waiting.
+ * Use a promise to delay
  */
-function displayTargetText(text, callback) {
-    // Display the text
-    targetDisplayElement.innerHTML = text;
+function delay(milliseconds) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    });
+}
 
-    // Wait, and then call a callback
-    setTimeout(callback, targetDisplayTime);
+/*
+ * Recursively display targets in sequence
+ */
+function displayTargets(index) {
+    target = targets[index];
+    console.log("Displaying target " + target);
+    targetDisplayElement.innerHTML = target;
+    delay(targetDisplayTime).then(() => {
+        // Once this has been displayed for long enough, display the next one  
+        if (index < targets.length) {
+            displayTargets(index + 1);
+        } 
+    });
 }
 
 // Stop the trial
