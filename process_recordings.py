@@ -16,11 +16,8 @@ plt.rcParams['figure.dpi'] = 100
 # directories
 wave_dir = "./wave/"
 
-# length of each word and the entire recording, in ms
-# WARNING this has to manually be set to the same value as in the JS
-word_length = 2000
-recording_length = 4000
-
-for wave_file in os.listdir(wave_dir):
+# extract the damn formants
+for i, wave_file in enumerate(os.listdir(wave_dir)):
+    print("processing sound",  i)
     sound = parselmouth.Sound(wave_dir + wave_file)
     parselmouth.praat.run_file(sound, "./vowelformant.praat")
