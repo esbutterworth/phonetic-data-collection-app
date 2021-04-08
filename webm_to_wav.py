@@ -11,7 +11,7 @@ from pydub.utils import make_chunks
 
 upload_dir = "./upload/"
 tmp_dir = "./tmp/"
-wave_dir = "./wave/"
+wav_dir = "./wave/"
 
 # TODO this should be in a global config
 word_length = 2000 #ms
@@ -32,11 +32,12 @@ for wav_file in os.listdir(tmp_dir):
 
         # export all the chunks as wav files to the wave dir
         for i, chunk in enumerate(chunks):
-            chunk_name = wave_dir + "chunk{0}.wav".format(i)
+            # ignore the last chunk, because it's 0 seconds long and praat doesn't like that
+            if (i == (len(chunks) - 1)):
+                continue
+            chunk_name = wav_dir + os.path.splitext(wav_file)[0] + "-{0}.wav".format(i)
             print("exporting ", chunk_name)
             chunk.export(chunk_name, format="wav")
-        
-        # TODO this results in one extra, tiny file that we don't need.
 
         # clean up
         os.remove(tmp_dir + wav_file)

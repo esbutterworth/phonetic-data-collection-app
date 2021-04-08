@@ -227,32 +227,32 @@ selectObject: selectedObj
 Extract part: vowelStart, vowelEnd, "rectangular", 1, "no"
 extracted = selected()
 
-To Pitch... 0.0 75 600
-	writeInfoLine: "Pitch (mean):"
-	meanPitch = Get mean: 0, 0, "Hertz"
-        appendInfo: "    "
-	appendInfo: fixed$ (meanPitch, 2)
-	appendInfoLine: " Hz"
-Remove
+#To Pitch... 0.0 75 600
+#	writeInfoLine: "Pitch (mean):"
+#	meanPitch = Get mean: 0, 0, "Hertz"
+#        appendInfo: "    "
+#	appendInfo: fixed$ (meanPitch, 2)
+#	appendInfoLine: " Hz"
+#Remove
 
 selectObject: extracted
 To Formant (burg)... 0.0 5.0 5500.0 0.025 50.0
 
-	appendInfoLine:""
-	appendInfoLine: "F1 (mean):"
-	meanF1 = Get mean: 1, 0, 0, "Hertz"
-        appendInfo: "    "
-	appendInfo: fixed$ (meanF1, 2)
-	appendInfoLine: " Hz"
-
-	appendInfoLine:""
-	appendInfoLine: "F2 (mean):"
-	meanF2 = Get mean: 2, 0, 0, "Hertz"
-        appendInfo: "    "
-	appendInfo: fixed$ (meanF2, 2)
-	appendInfoLine: " Hz"
-
+#	appendInfoLine:""
+#	appendInfoLine: "F1 (mean):"
+#	meanF1 = Get mean: 1, 0, 0, "Hertz"
+#        appendInfo: "    "
+#	appendInfo: fixed$ (meanF1, 2)
+#	appendInfoLine: " Hz"
+#
+#	appendInfoLine:""
+#	appendInfoLine: "F2 (mean):"
+#	meanF2 = Get mean: 2, 0, 0, "Hertz"
+#        appendInfo: "    "
+#	appendInfo: fixed$ (meanF2, 2)
+#	appendInfoLine: " Hz"
+#
 # remove formant object
-Remove
-selectObject: extracted
-Remove
+#Remove
+#selectObject: extracted
+#Remove
