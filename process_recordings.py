@@ -9,6 +9,9 @@ import os
 wave_dir = "./wave/"
 formant_proc_script = "./vowelformant.praat"
 
+# results file TODO probably don't use txt lmao
+results = open("results.txt", "w")
+
 # extract the damn formants
 for wave_file in os.listdir(wave_dir):
     print("processing sound",  wave_file)
@@ -23,4 +26,7 @@ for wave_file in os.listdir(wave_dir):
     print("Mean F1:", f1)
     print("Mean F2:", f2)
     
-
+    # write results to a file TODO better label than just the filename
+    results.write(wave_file + " Mean F1: " + str(f1) + "\n")
+    results.write(wave_file + " Mean F2: " + str(f2) + "\n")
+    results.write("\n") 
