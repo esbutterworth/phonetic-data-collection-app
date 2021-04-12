@@ -8,3 +8,4 @@ Planned changes:
 - eventually, a configuration file for everything, so that people can use this tool for whatever they want
 - rewrite to use pure parselmouth instead of this ancient praat script
 - better file naming for better analysis
+- stop using php7 (or ideally, stop using php at all)
