@@ -8,20 +8,16 @@
  * @author Elliot Butterworth
  */
 
-// For now, hardcoding the words here, but using JSON so eventually I'll be
-// able to use external files.
-var targetData = '{ "targets": ["tack", "wack"]}';
-
 // HTML element for displaying current target 
 var targetDisplayElement;
 
 // TODO it would be nice to have this random, but I think it's more important to have consistent indices.
-var targets = JSON.parse(targetData).targets;
+var targets;
 
 // The length of each target
 const targetDisplayTime = 2000;
 // The total length of the recording 
-const recordingTime = targetDisplayTime * targets.length;
+var recordingTime;
 
 /*
  * Functions for audio recording
@@ -33,6 +29,12 @@ const recordingTime = targetDisplayTime * targets.length;
 function startTrial() {
     targetDisplayElement = document.getElementById('target');
     
+    // I think this is awful, but the paper is due in 3 weeks so this what we got
+    $.getJSON("words.json", (result) => {
+        targets = result.words; 
+        recordingTime = targetDisplayTime * targets.length;
+    });
+
     // Get permission to use the mic:
     navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
         targetDisplayElement.innerHTML = 'Read the sentences as they appear.';
